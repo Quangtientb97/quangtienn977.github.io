@@ -54,7 +54,7 @@ io.sockets.on('connection', function(socket){
 	let sql0 = `CREATE TABLE IF NOT EXISTS users( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf COLLATE utf8_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME, updated_at DATETIME) ENGINE = InnoDB`; 
     con.query(sql0, function (err) {
         con.on('error',function(err){
-        	console.log('mysql error',err);
+        	console.log('mysql error 57',err);
         });       
         console.log('Tao bang thanh cong');
     });
@@ -75,7 +75,7 @@ io.sockets.on('connection', function(socket){
 	  
 		con.query('SELECT * FROM users where email=?',[email], function(err,result, fields){
 			con.on('error',function(err){
-				console.log('mysql error',err);
+				console.log('mysql error 78',err);
 			});
 
 			if (result && result.length){
@@ -87,7 +87,7 @@ io.sockets.on('connection', function(socket){
 				ketqua = true;
 				let sql1 = `INSERT INTO users(unique_id, name, email, encrypted_password, salt, create_at) values (  \'${uid}\', \'${name}\', \'${email}\', \'${password}\', \'${salt}\', CURTIME())` ;
 				con.query(sql1, function (err) {
-						console.log('mysql error',err);
+						console.log('mysql error 90',err);
 						//console.log('khong thanh cong');						
 				});
 				console.log('thanh cong');
@@ -110,7 +110,7 @@ io.sockets.on('connection', function(socket){
 		
 		con.query('SELECT * FROM users where email=?',[email], function(err,result, fields){
 			con.on('error',function(err){
-				console.log('mysql error',err);
+				console.log('mysql error 113',err);
 			});
 			if (result && result.length){
 				var salt = result[0].salt;
@@ -139,13 +139,13 @@ io.sockets.on('connection', function(socket){
 		let sql = `CREATE TABLE IF NOT EXISTS device${data.device_id}_log (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,ThoiGian DATETIME DEFAULT CURTIME(), chieuquay VARCHAR(255), tocdo INT(10)) ENGINE = InnoDB` ;
 		con.query(sql, function(err){
 			con.on('error', function(err){
-				console.log('mysql error',err);
+				console.log('mysql error 142',err);
 			});
 		});
 		sql = `INSERT INTO device${data.device_id}_log(chieuquay, tocdo) values (  \'${data.chieuquay}\', \'${data.tocdo}\')`;
 		con.query(sql, function(err){
 			con.on('error', function(err){
-				console.log('mysql error',err);
+				console.log('mysql error 148',err);
 			});
 		});		
 	});
@@ -154,7 +154,7 @@ io.sockets.on('connection', function(socket){
 		var device_id = data;
 		con.query('SELECT `unique_id` FROM devices where device_id=?',[device_id], function(err,result, fields){
 			con.on('error',function(err){
-				console.log('mysql error',err);
+				console.log('mysql error 157',err);
 			});
 			//console.log(result[0].unique_id);
 			var room = result[0].unique_id;
@@ -164,17 +164,17 @@ io.sockets.on('connection', function(socket){
 		});	
 	});
 	socket.on('join-room-app', function(data){
-		var name = data;
-		con.query('SELECT `unique_id` FROM user where name=?',[name], function(err,result, fields){
+		var email = data.email;
+		con.query('SELECT * FROM users where email = ? ',[email], function(err,result, fields){
 			con.on('error',function(err){
-				console.log('mysql error',err);
+				console.log('mysql error 170',err);
 			});
+			var room = result[0].unique_id;
 			//console.log(result[0].unique_id);
-			socket.join(result[0].unique_id);
-			console.log(socket.id + "da join phong: " + result[0].unique_id);
+			socket.join(room);
+			console.log(socket.id + "da join phong: " + room);
 		});	
 	});
-
 
 
 
