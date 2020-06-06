@@ -15,7 +15,9 @@ var con = mysql.createConnection({
    database: "b034kdbmfuvinopgjuse"
 });
 var ketqua;
-//password 
+
+
+/*password ---------------------------------------------------------*/
 var getRandomString =function(length){
 	return crypto.randomBytes(Math.ceil(length/2))
 	.toString('hex') // convert to hexa
@@ -44,17 +46,16 @@ function checkHashPassword(userPassword,salt){
 	return passwordData;
 
 };
+/*end passwword-----------------------------------------------------------*/
 
-
+/*bat su kien ket noi server-------------------------------------------------*/
 io.sockets.on('connection', function(socket){
 
 	console.log("co nguoi ket noi ");
-	let sql0 = `CREATE TABLE IF NOT EXISTS user( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(23) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME NOT NULL , updated_at DATETIME NOT NULL) ENGINE = InnoDB`; ;
-      //console.log(sql0);
+	let sql0 = `CREATE TABLE IF NOT EXISTS user( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(23) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME NOT NULL , updated_at DATETIME NOT NULL) ENGINE = InnoDB`; 
     con.query(sql0, function (err) {
-        //if (err) throw err;
         con.on('error',function(err){
-          console.log('mysql error',err);
+        	console.log('mysql error',err);
         });       
         console.log('Tao bang thanh cong');
     });
@@ -71,29 +72,28 @@ io.sockets.on('connection', function(socket){
 		var salt 			= hash_data.salt;
 		
 	  
-	 con.query('SELECT * FROM user where email=?',[email], function(err,result, fields){
+		con.query('SELECT * FROM user where email=?',[email], function(err,result, fields){
 			con.on('error',function(err){
 				console.log('mysql error',err);
 			});
 
 			if (result && result.length){
 				ketqua = false;
-			
-			console.log("tai khoan da ton tai ");
-		}
-		else{
-			ketqua = true;
-			con.query('INSERT INTO `user`(`unique_id`, `name`, `email`, `encrypted_password`, `salt`, `create_at`, `updated_at`) VALUES (?,?,?,?,?,NOW(),NOW())',[uid,name,email,password,salt],function(err,result, fields){
-			con.on('error',function(err){
-				console.log('mysql error',err);
-				console.log('khong thanh cong');
 				
-			});
-			console.log('thanh cong');
-			//socket.emit('ket-qua-dang-ki',{noidung: ketqua});
-		});
-		}
-		 socket.emit('ket-qua-dang-ki',{noidung: ketqua});
+				console.log("tai khoan da ton tai ");
+			}
+			else{
+				ketqua = true;
+				con.query('INSERT INTO `user`(`unique_id`, `name`, `email`, `encrypted_password`, `salt`, `create_at`, `updated_at`) VALUES (?,?,?,?,?,NOW(),NOW())',[uid,name,email,password,salt],function(err,result, fields){
+					con.on('error',function(err){
+						console.log('mysql error',err);
+						console.log('khong thanh cong');						
+					});
+				console.log('thanh cong');
+				//socket.emit('ket-qua-dang-ki',{noidung: ketqua});
+				});
+			}
+			socket.emit('ket-qua-dang-ki',{noidung: ketqua});
 		});	
 
 	});
@@ -102,35 +102,31 @@ io.sockets.on('connection', function(socket){
 		var email    	  = data.email;
 		var user_password = data.password;
 		
-	 con.query('SELECT * FROM user where email=?',[email], function(err,result, fields){
-			con.on('error',function(err){
-				console.log('mysql error',err);
-			});
-			if (result && result.length)
-			{
-				var salt = result[0].salt;
-				var encrypted_password = result[0].encrypted_password;
-				var hashed_password = checkHashPassword(user_password,salt).passwordHash.slice(0,16);
-				if (encrypted_password == hashed_password) {
-					ketqua = true;
-					//res.end(JSON.stringify(result[0]));
-					console.log('dang nhap thanh cong');
-					console.log(result[0]);
-				}
-				else{
-					ketqua = false;
-					console.log('dang nhap k thanh cong');
-				}
-				
-			 }
-			
-		else
-		{
+	con.query('SELECT * FROM user where email=?',[email], function(err,result, fields){
+		con.on('error',function(err){
+			console.log('mysql error',err);
+		});
+		if (result && result.length){
+			var salt = result[0].salt;
+			var encrypted_password = result[0].encrypted_password;
+			var hashed_password = checkHashPassword(user_password,salt).passwordHash.slice(0,16);
+			if (encrypted_password == hashed_password) {
+				ketqua = true;
+				//res.end(JSON.stringify(result[0]));
+				console.log('dang nhap thanh cong');
+				console.log(result[0]);
+			}
+			else{
+				ketqua = false;
+				console.log('dang nhap k thanh cong');
+			}
+		}
+		else{
 			ketqua = false;
-		console.log('dang nhap k thanh cong');
+			console.log('dang nhap k thanh cong');
 		}
 		socket.emit('ket-qua-dang-nhap',{noidung: ketqua});
-		});
+	});
 });
 //gui du lieu device
 // socket.on('client-gui-device', function(data){
