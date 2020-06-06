@@ -62,7 +62,7 @@ io.sockets.on('connection', function(socket){
 	// dang ki tai khoan
 	socket.on('client-dang-ki-user', function(data){
 		//var ketqua;
-		console.log(data);
+		//console.log(data);
 		var name     		= data.name;
 		var email    		= data.email;
 		var password 		= data.password;
@@ -70,7 +70,7 @@ io.sockets.on('connection', function(socket){
 		var plaint_password = password;
 		var hash_data 		= saltHashPassword(plaint_password);
 		var password  		= hash_data.passwordHash.slice(0,16);
-		console.log(password);
+		//console.log(password);
 		var salt 			= hash_data.salt;
 		
 	  
@@ -89,7 +89,7 @@ io.sockets.on('connection', function(socket){
 				let sql1 = `INSERT INTO users(unique_id, name, email, encrypted_password, salt, creat_at) values (  \'${uid}\', \'${name}\', \'${email}\', \'${password}\', \'${salt}\', CURTIME())` ;
 				con.query(sql1, function (err) {
 						console.log('mysql error',err);
-						console.log('khong thanh cong');						
+						//console.log('khong thanh cong');						
 				});
 				console.log('thanh cong');
 				/*con.query('INSERT INTO `user`(`unique_id`, `name`, `email`, `encrypted_password`, `salt`, `create_at`, `updated_at`) VALUES (?,?,?,?,?,NOW(),NOW())',[uid,name,email,password,salt],function(err,result, fields){
