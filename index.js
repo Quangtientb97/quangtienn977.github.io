@@ -158,7 +158,7 @@ io.sockets.on('connection', function(socket){
 // });
 
 //device
-	socket.on('update_data', function (data) { //thông số động cơ
+	/*socket.on('update_data', function (data) { //thông số động cơ
     //socket.broadcast.emit('news', data); 
 	    console.log("nhan update");
 	    var data_json = JSON.stringify(data)
@@ -201,7 +201,7 @@ io.sockets.on('connection', function(socket){
 			});		
 		socket.join(result);
 		console.log("join room" + result);
-	})
+	})*/
 
 
 });
