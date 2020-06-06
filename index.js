@@ -35,9 +35,9 @@ var sha512 = function(password,salt){
 };
 
 function saltHashPassword(userPassword){
-var salt = getRandomString(16);
-var passwordData = sha512(userPassword,salt);
-return passwordData;
+	var salt = getRandomString(16);
+	var passwordData = sha512(userPassword,salt);
+	return passwordData;
 };
 
 function checkHashPassword(userPassword,salt){
@@ -151,8 +151,8 @@ io.sockets.on('connection', function(socket){
 	});
 	//join room
 	socket.on('join-room-device', function(data){
-		sql = ``;
-		con.query('SELECT `unique_id` FROM users where name=?',[data], function(err,result, fields){
+		var device_id = data;
+		con.query('SELECT `unique_id` FROM users where device_id=?',[device_id], function(err,result, fields){
 			con.on('error',function(err){
 				console.log('mysql error',err);
 			});
@@ -171,15 +171,4 @@ io.sockets.on('connection', function(socket){
 
 
 
-//device and app
-	/*socket.on('join-room-app', function(data){// data = username
-		con.query('SELECT `unique_id` FROM users where name=?',[data], function(err,result, fields){
-			con.on('error',function(err){
-				console.log('mysql error',err);
-			});
-		});	
-		socket.join(result);
-		console.log(result);
-	})*/
-	
 
