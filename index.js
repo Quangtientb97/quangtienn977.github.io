@@ -193,7 +193,7 @@ io.sockets.on('connection', function(socket){
 			});		
 		socket.join(result);
 		console.log(result);
-	})
+	})*/
 	socket.on('join-room-device', function(data){// data = device_id
 		con.query('SELECT `unique_id` FROM device where device_id=?',[data], function(err,result, fields){
 			con.on('error',function(err){
@@ -201,7 +201,7 @@ io.sockets.on('connection', function(socket){
 			});		
 		socket.join(result);
 		console.log("join room" + result);
-	})*/
+	})
 
 
 });
