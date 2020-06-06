@@ -86,7 +86,7 @@ io.sockets.on('connection', function(socket){
 			}
 			else{
 				ketqua = true;
-				let sql1 = `INSERT INTO users(unique_id, name, email, encrypted_password, salt, creat_at) values (  \'${uid}\', \'${name}\', \'${email}\', \'${password}\', \'${salt}\', CURTIME())` ;
+				let sql1 = `INSERT INTO users(unique_id, name, email, encrypted_password, salt, create_at) values (  \'${uid}\', \'${name}\', \'${email}\', \'${password}\', \'${salt}\', CURTIME())` ;
 				con.query(sql1, function (err) {
 						console.log('mysql error',err);
 						//console.log('khong thanh cong');						
