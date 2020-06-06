@@ -7,12 +7,12 @@ var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
 var fs = require("fs");
-server.listen(process.env.PORT || 3000);
+server.listen(8080);
 var con = mysql.createConnection({
- host: "localhost",
-  user: "root",
-  password: "",
-   database: "demo"
+ host: "b034kdbmfuvinopgjuse-mysql.services.clever-cloud.com",
+  user: "u20nnlbcqemoj3jy",
+  password: "t7zRtkGhq0F1svEcGKlC",
+   database: "b034kdbmfuvinopgjuse"
 });
 var ketqua;
 //password 
