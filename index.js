@@ -156,7 +156,9 @@ io.sockets.on('connection', function(socket){
 			con.on('error',function(err){
 				console.log('mysql error',err);
 			});
-			console.log(result[0].unique_id);
+			//console.log(result[0].unique_id);
+			socket.join(result[0].unique_id);
+			console.log(socket.id + "da join phong" + result[0].unique_id);
 		});	
 	});
 
