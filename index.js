@@ -52,7 +52,7 @@ function checkHashPassword(userPassword,salt){
 io.sockets.on('connection', function(socket){
 
 	console.log("co nguoi ket noi ");
-	let sql0 = `CREATE TABLE IF NOT EXISTS user( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME DEFAULT CURTIME() , updated_at DATETIME DEFAULT CURTIME()) ENGINE = InnoDB`; 
+	let sql0 = `CREATE TABLE IF NOT EXISTS users( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME DEFAULT CURTIME() , updated_at DATETIME DEFAULT CURTIME()) ENGINE = InnoDB`; 
     con.query(sql0, function (err) {
         con.on('error',function(err){
         	console.log('mysql error',err);
@@ -72,7 +72,7 @@ io.sockets.on('connection', function(socket){
 		var salt 			= hash_data.salt;
 		
 	  
-		con.query('SELECT * FROM user where email=?',[email], function(err,result, fields){
+		con.query('SELECT * FROM users where email=?',[email], function(err,result, fields){
 			con.on('error',function(err){
 				console.log('mysql error',err);
 			});
@@ -84,7 +84,7 @@ io.sockets.on('connection', function(socket){
 			}
 			else{
 				ketqua = true;
-				let sql1 = `INSERT INTO user(unique_id, name, email, encrypted_password, salt) values (  \'${uid}\', \'${name}\', \'${email}\', \'${password}\', \'${salt}\')` ;
+				let sql1 = `INSERT INTO users(unique_id, name, email, encrypted_password, salt) values (  \'${uid}\', \'${name}\', \'${email}\', \'${password}\', \'${salt}\')` ;
 				con.query(sql1, function (err) {
 						console.log('mysql error',err);
 						console.log('khong thanh cong');						
@@ -108,7 +108,7 @@ io.sockets.on('connection', function(socket){
 		var email    	  = data.email;
 		var user_password = data.password;
 		
-	con.query('SELECT * FROM user where email=?',[email], function(err,result, fields){
+	con.query('SELECT * FROM users where email=?',[email], function(err,result, fields){
 		con.on('error',function(err){
 			console.log('mysql error',err);
 		});
