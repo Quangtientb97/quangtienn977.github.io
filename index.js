@@ -50,7 +50,6 @@ function checkHashPassword(userPassword,salt){
 
 /*bat su kien ket noi server-------------------------------------------------*/
 io.sockets.on('connection', function(socket){
-
 	console.log("co nguoi ket noi ");
 	let sql0 = `CREATE TABLE IF NOT EXISTS users( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf COLLATE utf8_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME, updated_at DATETIME) ENGINE = InnoDB`; 
     con.query(sql0, function (err) {
@@ -103,85 +102,72 @@ io.sockets.on('connection', function(socket){
 			}
 			socket.emit('ket-qua-dang-ki',{noidung: ketqua});
 		});	
-
 	});
 	// dang nhap
 	socket.on('client-dang-nhap-user', function(data){
 		var email    	  = data.email;
 		var user_password = data.password;
 		
-	con.query('SELECT * FROM users where email=?',[email], function(err,result, fields){
-		con.on('error',function(err){
-			console.log('mysql error',err);
-		});
-		if (result && result.length){
-			var salt = result[0].salt;
-			var encrypted_password = result[0].encrypted_password;
-			var hashed_password = checkHashPassword(user_password,salt).passwordHash.slice(0,16);
-			if (encrypted_password == hashed_password) {
-				ketqua = true;
-				//res.end(JSON.stringify(result[0]));
-				console.log('dang nhap thanh cong');
-				console.log(result[0]);
+		con.query('SELECT * FROM users where email=?',[email], function(err,result, fields){
+			con.on('error',function(err){
+				console.log('mysql error',err);
+			});
+			if (result && result.length){
+				var salt = result[0].salt;
+				var encrypted_password = result[0].encrypted_password;
+				var hashed_password = checkHashPassword(user_password,salt).passwordHash.slice(0,16);
+				if (encrypted_password == hashed_password) {
+					ketqua = true;
+					//res.end(JSON.stringify(result[0]));
+					console.log('dang nhap thanh cong');
+					console.log(result[0]);
+				}
+				else{
+					ketqua = false;
+					console.log('dang nhap k thanh cong');
+				}
 			}
 			else{
 				ketqua = false;
 				console.log('dang nhap k thanh cong');
 			}
-		}
-		else{
-			ketqua = false;
-			console.log('dang nhap k thanh cong');
-		}
-		socket.emit('ket-qua-dang-nhap',{noidung: ketqua});
+			socket.emit('ket-qua-dang-nhap',{noidung: ketqua});
+		});
 	});
+	//update_data device
+	socket.on('update_data', function(data){
+		let sql = `CREATE TABLE IF NOT EXISTS device${data.device_id}_log (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,ThoiGian DATETIME DEFAULT CURTIME(), chieuquay VARCHAR(255), tocdo INT(10)) ENGINE = InnoDB` ;
+		con.query(sql, function(err){
+			con.on('error', function(err){
+				console.log('mysql error',err);
+			});
+		});
+		sql = `INSERT INTO device${data.device_id}_log(chieuquay, tocdo) values (  \'${data.chieuquay}\', \'${data.tocdo}\')`;
+		con.query(sql, function(err){
+			con.on('error', function(err){
+				console.log('mysql error',err);
+			});
+		});		
+	});
+	//join room
+	socket.on('join-room-device', function(data){
+		sql = ``;
+		con.query('SELECT `unique_id` FROM users where name=?',[data], function(err,result, fields){
+			con.on('error',function(err){
+				console.log('mysql error',err);
+			});
+			console.log(result);
+		});	
+	});
+
+
+
+
+
+
+//end io
 });
-//gui du lieu device
-// socket.on('client-gui-device', function(data){
-// 	device_id = data.device_id;
-// 	unique_id = data.unique_id;
-//   	name      = data.name;
-//   	mode      = data.mode;
-//   	speed     = data.speed;
-//   	rotation  = data.rotation;
-  
-//   con.query('UPDATE `devices` SET `device_id`=?,`unique_id`=?,`name`=?,`mode`=?,`speed`=?,`rotation`=? WHERE 1',[device_id,unique_id,name,mode,speed,rotation], function(err,result, fields){
-// 		con.on('error',function(err){
-// 			console.log('mysql error',err);
-// 		});
 
-	
-// 	});	
-
-
-
-// });
-
-//device
-	socket.on('update_data', function (data) { //thông số động cơ
-    //socket.broadcast.emit('news', data); 
-	    console.log("nhan update");
-	    var data_json = JSON.stringify(data)
-	    console.log(".");
-	    console.log(data);
-	    console.log("devide id: " + data.device_id);
-	    console.log("tocdo: " + data.tocdo);
-	    console.log("chieuquay: " + data.chieuquay);
-	    con.connect(function (err){
-		    con.on('error',function(err){
-		        console.log('mysql error',err);
-		    });
-		      //nếu thành công
-		    let sql = `CREATE TABLE IF NOT EXISTS device${data.device_id}_log (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,ThoiGian DATETIME DEFAULT CURTIME(), chieuquay VARCHAR(255), tocdo INT(10)) ENGINE = InnoDB` ;
-		    	con.query(sql, function (err) {
-					console.log('mysql error',err);
-		    });
-		    sql = `INSERT INTO device${data.device_id}_log(chieuquay, tocdo) values (  \'${data.chieuquay}\', \'${data.tocdo}\')` ;
-		    	con.query(sql, function (err) {
-		    		console.log('mysql error',err);
-	    		});
-    	});
-	});
 
 
 
@@ -190,18 +176,10 @@ io.sockets.on('connection', function(socket){
 		con.query('SELECT `unique_id` FROM users where name=?',[data], function(err,result, fields){
 			con.on('error',function(err){
 				console.log('mysql error',err);
-			});		
+			});
+		});	
 		socket.join(result);
 		console.log(result);
 	})*/
-	socket.on('join-room-device', function(data){// data = device_id
-		con.query('SELECT `unique_id` FROM device where device_id=?',[data], function(err,result, fields){
-			con.on('error',function(err){
-				console.log('mysql error',err);
-			});		
-		socket.join(result);
-		console.log("join room" + result);
-	});
+	
 
-
-});
