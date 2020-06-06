@@ -69,7 +69,7 @@ io.sockets.on('connection', function(socket){
 		var uid 			= uuid.v4();
 		var plaint_password = password;
 		var hash_data 		= saltHashPassword(plaint_password);
-		var password  		= hash_data.passwordHash;
+		var password  		= hash_data.passwordHash.slice(0,16);
 		console.log(password);
 		var salt 			= hash_data.salt;
 		
