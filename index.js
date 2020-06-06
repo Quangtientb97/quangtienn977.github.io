@@ -152,7 +152,7 @@ io.sockets.on('connection', function(socket){
 	//join room
 	socket.on('join-room-device', function(data){
 		var device_id = data;
-		con.query('SELECT `unique_id` FROM device where device_id=?',[device_id], function(err,result, fields){
+		con.query('SELECT `unique_id` FROM devices where device_id=?',[device_id], function(err,result, fields){
 			con.on('error',function(err){
 				console.log('mysql error',err);
 			});
