@@ -69,7 +69,8 @@ io.sockets.on('connection', function(socket){
 		var uid 			= uuid.v4();
 		var plaint_password = password;
 		var hash_data 		= saltHashPassword(plaint_password);
-		var encrypted_password  		= hash_data.passwordData;
+		var password  		= hash_data.passwordHash;
+		console.log(password);
 		var salt 			= hash_data.salt;
 		
 	  
@@ -85,7 +86,7 @@ io.sockets.on('connection', function(socket){
 			}
 			else{
 				ketqua = true;
-				let sql1 = `INSERT INTO users(unique_id, name, email, encrypted_password, salt) values (  \'${uid}\', \'${name}\', \'${email}\', \'${encrypted_password}\', \'${salt}\')` ;
+				let sql1 = `INSERT INTO users(unique_id, name, email, encrypted_password, salt) values (  \'${uid}\', \'${name}\', \'${email}\', \'${password}\', \'${salt}\')` ;
 				con.query(sql1, function (err) {
 						console.log('mysql error',err);
 						console.log('khong thanh cong');						
