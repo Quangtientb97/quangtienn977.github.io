@@ -152,7 +152,7 @@ io.sockets.on('connection', function(socket){
 	//join room
 	socket.on('join-room-device', function(data){
 		var device_id = data.device_id;
-		con.query('SELECT `unique_id` FROM devices where device_id=?',[device_id], function(err,result, fields){
+		con.query('SELECT * FROM devices where device_id=?',[device_id], function(err,result, fields){
 			con.on('error',function(err){
 				console.log('mysql error',err);
 			});
@@ -165,7 +165,7 @@ io.sockets.on('connection', function(socket){
 	});
 	socket.on('join-room-app', function(data){
 		var email = data.email;
-		con.query('SELECT `unique_id` FROM user where email = ? ',[email], function(err,result, fields){
+		con.query('SELECT * FROM user where email = ? ',[email], function(err,result, fields){
 			con.on('error',function(err){
 				console.log('mysql error',err);
 			});
