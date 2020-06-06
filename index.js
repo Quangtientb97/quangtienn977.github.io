@@ -157,5 +157,51 @@ io.sockets.on('connection', function(socket){
 
 // });
 
+//device
+	socket.on('update_data', function (data) { //thông số động cơ
+    //socket.broadcast.emit('news', data); 
+	    console.log("nhan update");
+	    var data_json = JSON.stringify(data)
+	    console.log(".");
+	    console.log(data);
+	    console.log("devide id: " + data.device_id);
+	    console.log("tocdo: " + data.tocdo);
+	    console.log("chieuquay: " + data.chieuquay);
+	    con.connect(function (err){
+		    con.on('error',function(err){
+		        console.log('mysql error',err);
+		    });
+		      //nếu thành công
+		    let sql = `CREATE TABLE IF NOT EXISTS device${data.device_id}_log (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,ThoiGian DATETIME DEFAULT CURTIME(), chieuquay VARCHAR(255), tocdo INT(10)) ENGINE = InnoDB` ;
+		    	con.query(sql, function (err) {
+					console.log('mysql error',err);
+		    });
+		    sql = `INSERT INTO device${data.device_id}_log(chieuquay, tocdo) values (  \'${data.chieuquay}\', \'${data.tocdo}\')` ;
+		    	con.query(sql, function (err) {
+		    		console.log('mysql error',err);
+	    		});
+    	});
+	});
+
+
+
+//device and app
+	socket.on('join-room-app', function(data){// data = username
+		con.query('SELECT `unique_id` FROM users where name=?',[data], function(err,result, fields){
+			con.on('error',function(err){
+				console.log('mysql error',err);
+			});		
+		socket.join(result);
+		console.log(result);
+	})
+	socket.on('join-room-device', function(data){// data = device_id
+		con.query('SELECT `unique_id` FROM device where device_id=?',[data], function(err,result, fields){
+			con.on('error',function(err){
+				console.log('mysql error',err);
+			});		
+		socket.join(result);
+		console.log("join room" + result);
+	})
+
 
 });
