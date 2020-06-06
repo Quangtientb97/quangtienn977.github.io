@@ -52,7 +52,7 @@ function checkHashPassword(userPassword,salt){
 io.sockets.on('connection', function(socket){
 
 	console.log("co nguoi ket noi ");
-	let sql0 = `CREATE TABLE IF NOT EXISTS user( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(23) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME DEFAULT CURTIME() , updated_at DATETIME DEFAULT CURTIME()) ENGINE = InnoDB`; 
+	let sql0 = `CREATE TABLE IF NOT EXISTS user( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME DEFAULT CURTIME() , updated_at DATETIME DEFAULT CURTIME()) ENGINE = InnoDB`; 
     con.query(sql0, function (err) {
         con.on('error',function(err){
         	console.log('mysql error',err);
