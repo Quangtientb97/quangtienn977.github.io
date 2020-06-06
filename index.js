@@ -158,10 +158,20 @@ io.sockets.on('connection', function(socket){
 			});
 			//console.log(result[0].unique_id);
 			socket.join(result[0].unique_id);
-			console.log(socket.id + "da join phong" + result[0].unique_id);
+			console.log(socket.id + "da join phong: " + result[0].unique_id);
 		});	
 	});
-
+	socket.on('join-room-app', function(data){
+		var name = data;
+		con.query('SELECT `unique_id` FROM user where name=?',[name], function(err,result, fields){
+			con.on('error',function(err){
+				console.log('mysql error',err);
+			});
+			//console.log(result[0].unique_id);
+			socket.join(result[0].unique_id);
+			console.log(socket.id + "da join phong: " + result[0].unique_id);
+		});	
+	});
 
 
 
