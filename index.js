@@ -201,7 +201,7 @@ io.sockets.on('connection', function(socket){
 			});		
 		socket.join(result);
 		console.log("join room" + result);
-	})
+	});
 
 
 });
