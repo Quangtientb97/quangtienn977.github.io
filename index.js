@@ -158,7 +158,7 @@ io.sockets.on('connection', function(socket){
 // });
 
 //device
-	/*socket.on('update_data', function (data) { //thông số động cơ
+	socket.on('update_data', function (data) { //thông số động cơ
     //socket.broadcast.emit('news', data); 
 	    console.log("nhan update");
 	    var data_json = JSON.stringify(data)
@@ -186,7 +186,7 @@ io.sockets.on('connection', function(socket){
 
 
 //device and app
-	socket.on('join-room-app', function(data){// data = username
+	/*socket.on('join-room-app', function(data){// data = username
 		con.query('SELECT `unique_id` FROM users where name=?',[data], function(err,result, fields){
 			con.on('error',function(err){
 				console.log('mysql error',err);
