@@ -52,7 +52,7 @@ function checkHashPassword(userPassword,salt){
 io.sockets.on('connection', function(socket){
 
 	console.log("co nguoi ket noi ");
-	let sql0 = `CREATE TABLE IF NOT EXISTS user( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(23) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME NOT NULL , updated_at DATETIME NOT NULL) ENGINE = InnoDB`; 
+	let sql0 = `CREATE TABLE IF NOT EXISTS user( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(23) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME DEFAULT CURTIME() , updated_at DATETIME DEFAULT CURTIME()) ENGINE = InnoDB`; 
     con.query(sql0, function (err) {
         con.on('error',function(err){
         	console.log('mysql error',err);
@@ -84,14 +84,20 @@ io.sockets.on('connection', function(socket){
 			}
 			else{
 				ketqua = true;
-				con.query('INSERT INTO `user`(`unique_id`, `name`, `email`, `encrypted_password`, `salt`, `create_at`, `updated_at`) VALUES (?,?,?,?,?,NOW(),NOW())',[uid,name,email,password,salt],function(err,result, fields){
+				let sql1 = `INSERT INTO user(unique_id, name, email, encrypted_password, salt, create_at, updated_at) values (  \'${uid}\', \'${name}\', \'${email}\', \'${password}\', \'${salt}\',)` ;
+				con.query(sql1, function (err) {
+						console.log('mysql error',err);
+						console.log('khong thanh cong');						
+				});
+				console.log('thanh cong');
+				/*con.query('INSERT INTO `user`(`unique_id`, `name`, `email`, `encrypted_password`, `salt`, `create_at`, `updated_at`) VALUES (?,?,?,?,?,NOW(),NOW())',[uid,name,email,password,salt],function(err,result, fields){
 					con.on('error',function(err){
 						console.log('mysql error',err);
 						console.log('khong thanh cong');						
-					});
+				});
 				console.log('thanh cong');
 				//socket.emit('ket-qua-dang-ki',{noidung: ketqua});
-				});
+				});*/
 			}
 			socket.emit('ket-qua-dang-ki',{noidung: ketqua});
 		});	
