@@ -156,7 +156,7 @@ io.sockets.on('connection', function(socket){
 			con.on('error',function(err){
 				console.log('mysql error',err);
 			});
-			console.log(result);
+			console.log(result.unique_id);
 		});	
 	});
 
