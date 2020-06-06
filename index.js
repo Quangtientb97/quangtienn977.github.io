@@ -160,7 +160,7 @@ io.sockets.on('connection', function(socket){
 			var room = result[0].unique_id;
 			console.log(socket.id + "da join phong: " + result[0].unique_id);
 			socket.join(room);
-			
+			console.log(socket.adapter.rooms);
 		});	
 	});
 	socket.on('join-room-app', function(data){
