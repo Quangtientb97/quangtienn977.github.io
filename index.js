@@ -163,7 +163,7 @@ io.sockets.on('connection', function(socket){
 			console.log(socket.adapter.rooms);
 		});	
 	});
-	socket.on('join-room-app', function(data){
+	/*socket.on('join-room-app', function(data){
 		var email = data.email;
 		con.query('SELECT * FROM users where email = ? ',[email], function(err,result, fields){
 			con.on('error',function(err){
@@ -174,7 +174,7 @@ io.sockets.on('connection', function(socket){
 			socket.join(room);
 			console.log(socket.id + "da join phong: " + room);
 		});	
-	});
+	});*/
 
 
 
