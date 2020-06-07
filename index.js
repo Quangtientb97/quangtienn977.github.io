@@ -15,6 +15,9 @@ server.listen(8080);
    database: "b034kdbmfuvinopgjuse"
 });*/
 var ketqua;
+var con;
+
+handleDisconnect();
 
 
 /*password ---------------------------------------------------------*/
@@ -50,20 +53,6 @@ function checkHashPassword(userPassword,salt){
 
 /*bat su kien ket noi server-------------------------------------------------*/
 io.sockets.on('connection', function(socket){
-	var con = mysql.createConnection({
-	 host: "b034kdbmfuvinopgjuse-mysql.services.clever-cloud.com",
-	  user: "u20nnlbcqemoj3jy",
-	  password: "t7zRtkGhq0F1svEcGKlC",
-	   database: "b034kdbmfuvinopgjuse"
-	});
-	console.log("co nguoi ket noi ");
-	let sql0 = `CREATE TABLE IF NOT EXISTS users( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf COLLATE utf8_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME, updated_at DATETIME) ENGINE = InnoDB`; 
-    con.query(sql0, function (err) {
-        con.on('error',function(err){
-        	console.log('mysql error 57',err);
-        });       
-        console.log('Tao bang thanh cong');
-    });
 	// dang ki tai khoan
 	socket.on('client-dang-ki-user', function(data){
 		//var ketqua;
@@ -188,7 +177,31 @@ io.sockets.on('connection', function(socket){
 //end io
 });
 
+//
+function handleDisconnect() {
+	 con = mysql.createConnection({
+	 host: "b034kdbmfuvinopgjuse-mysql.services.clever-cloud.com",
+	  user: "u20nnlbcqemoj3jy",
+	  password: "t7zRtkGhq0F1svEcGKlC",
+	   database: "b034kdbmfuvinopgjuse"
+	});
 
+	con.connect(function(err) {              // The server is either down
+	    if(err) {                                     // or restarting (takes a while sometimes).
+	      console.log('error when connecting to db:', err);
+	      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+	    }                                     // to avoid a hot loop, and to allow our node script to
+	});                                     // process asynchronous requests in the meantime.
+	                                          // If you're also serving http, display a 503 error.
+	con.on('error', function(err) {
+	    console.log('db error', err);
+	    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+	      handleDisconnect();                         // lost due to either server restart, or a
+	    } else {                                      // connnection idle timeout (the wait_timeout
+	      throw err;                                  // server variable configures this)
+	    }
+	});
+}
 
 
 
