@@ -8,6 +8,7 @@ var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
 var fs = require("fs");
 server.listen(8080);
+require('events').EventEmitter.prototype._maxListeners = 100;
 /*var con = mysql.createConnection({
  host: "b034kdbmfuvinopgjuse-mysql.services.clever-cloud.com",
   user: "u20nnlbcqemoj3jy",
