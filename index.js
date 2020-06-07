@@ -8,12 +8,12 @@ var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
 var fs = require("fs");
 server.listen(8080);
-var con = mysql.createConnection({
+/*var con = mysql.createConnection({
  host: "b034kdbmfuvinopgjuse-mysql.services.clever-cloud.com",
   user: "u20nnlbcqemoj3jy",
   password: "t7zRtkGhq0F1svEcGKlC",
    database: "b034kdbmfuvinopgjuse"
-});
+});*/
 var ketqua;
 
 
@@ -50,6 +50,12 @@ function checkHashPassword(userPassword,salt){
 
 /*bat su kien ket noi server-------------------------------------------------*/
 io.sockets.on('connection', function(socket){
+	var con = mysql.createConnection({
+	 host: "b034kdbmfuvinopgjuse-mysql.services.clever-cloud.com",
+	  user: "u20nnlbcqemoj3jy",
+	  password: "t7zRtkGhq0F1svEcGKlC",
+	   database: "b034kdbmfuvinopgjuse"
+	});
 	console.log("co nguoi ket noi ");
 	let sql0 = `CREATE TABLE IF NOT EXISTS users( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, unique_id VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , name VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , email VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , encrypted_password VARCHAR(16) CHARACTER SET utf COLLATE utf8_general_ci NOT NULL , salt VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , create_at DATETIME, updated_at DATETIME) ENGINE = InnoDB`; 
     con.query(sql0, function (err) {
