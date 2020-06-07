@@ -15,4 +15,7 @@
     "socket.io": "^2.3.0",
     "uuid": "^8.1.0"
   }
+   "scripts": {
+    "start": "node index.js"
+   }
 }
