@@ -132,6 +132,7 @@ io.sockets.on('connection', function(socket){
 	});
 	//update_data device
 	socket.on('update_data', function(data){
+		console.log("nhan update_data");
 		let sql = `CREATE TABLE IF NOT EXISTS device${data.device_id}_log (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,ThoiGian DATETIME DEFAULT CURTIME(), chieuquay VARCHAR(255), tocdo INT(10)) ENGINE = InnoDB` ;
 		con.query(sql, function(err){
 			con.on('error', function(err){
