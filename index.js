@@ -7,7 +7,7 @@ var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
 var fs = require("fs");
-var moment = require(moment-timezone);
+var moment = require('moment-timezone');
 server.listen(8080);
 require('events').EventEmitter.prototype._maxListeners = 100;
 var con = mysql.createConnection({
@@ -130,9 +130,7 @@ io.sockets.on('connection', function(socket){
 				ketqua = false;
 				console.log('dang nhap k thanh cong');
 			}
-			socket.emit('ket-qua-dang-nhap',{noidung: data});
-			//oke ô
-
+			socket.emit('ket-qua-dang-nhap',{noidung: ketqua});
 		});
 		con.query('SELECT unique_id FROM users where email=?',[email], function(err,result, fields){
 			con.on('error',function(err){
