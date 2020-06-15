@@ -7,7 +7,7 @@ var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
 var fs = require("fs");
-var moment = require('moment-timezone');
+var moment = require(ata ho t);
 server.listen(8080);
 require('events').EventEmitter.prototype._maxListeners = 100;
 var con = mysql.createConnection({
@@ -98,7 +98,7 @@ io.sockets.on('connection', function(socket){
 						//console.log('khong thanh cong');						
 				});
 			}
-			socket.emit('ket-qua-dang-ki',{noidung: ketqua});
+			socket.emit('ket-qua-dang-ki',{noidung: data});
 		});	
 	});
 	// dang nhap
