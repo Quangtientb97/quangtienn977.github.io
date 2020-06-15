@@ -130,7 +130,8 @@ io.sockets.on('connection', function(socket){
 				ketqua = false;
 				console.log('dang nhap k thanh cong');
 			}
-			socket.emit('ket-qua-dang-nhap', result + ketqua);
+			result.noidung = ketqua;
+			socket.emit('ket-qua-dang-nhap', result );
 		});
 		con.query('SELECT unique_id FROM users where email=?',[email], function(err,result, fields){
 			con.on('error',function(err){
